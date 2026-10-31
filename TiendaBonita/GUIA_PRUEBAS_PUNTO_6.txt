@@ -1,0 +1,45 @@
+GUIA RÁPIDA PARA PROBAR Y PRESENTAR EL PUNTO 6
+==============================================
+
+ANTES DE ABRIR NETBEANS
+1. Inicia MySQL Server.
+2. En MySQL Workbench ejecuta database/diagnostico_esquema.sql.
+3. Comprueba que existan las tablas usuario, rol, categoria, producto, cliente, venta y detalle_venta.
+4. Confirma especialmente estos campos: producto.id_producto, producto.stock_minimo,
+   producto.fecha_vencimiento, cliente.direccion, venta.id_cliente, venta.id_usuario,
+   venta.total, venta.estado y detalle_venta.id_venta/id_producto/cantidad/precio/subtotal.
+5. Si faltan tablas, revisa database/estructura_punto6.sql. Es un esquema de referencia; no reemplaza
+   ni altera tablas ya creadas. Haz respaldo antes de cambiar una base con datos reales.
+6. Abre umg/DAO/ConexionBD.java y valida URL, usuario y contraseña para tu MySQL.
+
+EN NETBEANS
+1. Abre la carpeta TiendaBonita como proyecto Maven y espera a que descargue dependencias.
+2. Ejecuta app.Principal.TiendaBonita.
+3. Ingresa credenciales de un usuario existente y activo en la tabla usuario. No hay un usuario
+   ni una contraseña fijados dentro del código Java.
+
+DEMOSTRACIÓN RECOMENDADA
+A. Login: prueba una clave incorrecta (debe rechazarla), luego ingresa con un usuario válido.
+B. Productos: busca un código existente; intenta guardar un producto con precio negativo (debe
+   validarlo); guarda uno válido, búscalo en la tabla, actualízalo y elimina una prueba si no está
+   relacionada con ventas.
+C. Clientes: registra un cliente de prueba, búscalo por nombre o NIT y actualízalo.
+D. Ventas: selecciona un cliente, busca un producto por código y agrega cantidad 2. Prueba cantidad
+   0 o una cantidad mayor a la existencia (debe rechazarla). Confirma una venta válida.
+E. Verifica en MySQL que haya una fila en venta y detalle_venta y que producto.existencia disminuyó.
+F. Reportes: consulta stock bajo, productos por categoría, vencidos, ventas realizadas, ventas por
+   fecha y clientes registrados.
+G. Cerrar sesión: debe volver al login.
+
+CONSULTAS DE VERIFICACIÓN DESPUÉS DE UNA VENTA
+SELECT * FROM venta ORDER BY fecha DESC, id_venta DESC LIMIT 10;
+SELECT * FROM detalle_venta ORDER BY id_detalle DESC LIMIT 20;
+SELECT codigo, nombre, existencia, stock_minimo FROM producto ORDER BY nombre;
+
+LÍMITES DE LA REVISIÓN
+- Se verificó que las fuentes Java compilan con JDK 21 y que la ventana inicial puede arrancar.
+- La conexión y las consultas deben comprobarse contra tu servidor real, porque el archivo SQL original
+  recibido no incluye el DDL completo de las tablas ni datos completos de usuario/categoría.
+- Las ventanas se construyen directamente con Swing en Java; no incluyen archivos visuales .form de
+  NetBeans GUI Builder. Son ejecutables como interfaz Swing, aunque el diseñador visual no podrá
+  reabrir cada layout como formulario .form.
